@@ -1,0 +1,29 @@
+
+body {
+  font-family: "Inter", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1f2937; /* Um cinza escuro, um pouco mais claro que o fundo principal */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #10b981; /* O verde principal do tema */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #34d399; /* Um verde mais claro para o efeito hover */
+}
+
+
+#sidebar {
+  transition: transform 0.3s ease-in-out;
+}
