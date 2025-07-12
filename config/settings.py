@@ -139,5 +139,7 @@ LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = '/'
 
 # URL para onde o usuário é redirecionado após fazer logout.
+
+SESSION_COOKIE_AGE = 7200 
 LOGOUT_REDIRECT_URL = '/'
 LOGOUT_VIEW_ALLOWED_METHODS = ['GET', 'POST']
