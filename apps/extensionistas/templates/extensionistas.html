@@ -6,10 +6,17 @@ Gerenciar Extensionistas
 
 {% block content %}
 <div class="max-w-7xl mx-auto">
-    <!-- Título da Página -->
-    <div class="mb-8">
-        <h1 class="text-3xl font-bold text-white">Gerenciar Extensionistas</h1>
-        <p class="text-gray-400 mt-1">Filtre, visualize e gerencie os extensionistas de cada comitê.</p>
+
+    <!-- Título da Página e Botão Adicionar -->
+    <div class="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+            <h1 class="text-3xl font-bold text-white">Gerenciar Extensionistas</h1>
+            <p class="text-gray-400 mt-1">Filtre, visualize e gerencie os extensionistas de cada comitê.</p>
+        </div>
+        <a href="{% url 'extensionistas:extensionista_create' %}" class="inline-flex items-center px-5 py-2.5 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg shadow transition-colors">
+            <svg class="w-5 h-5 mr-2 -ml-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+            Adicionar Extensionista
+        </a>
     </div>
 
     <!-- Filtros por Comitê -->
@@ -40,18 +47,24 @@ Gerenciar Extensionistas
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="border-b border-gray-700">
-                        <td class="px-6 py-4 font-medium text-white">Ana Beatriz Costa</td>
-                        <td class="px-6 py-4 text-gray-400">23.456.78-9</td>
-                        <td class="px-6 py-4 text-gray-400">123.456.789-10</td>
-                        <td class="px-6 py-4"><span class="bg-green-500/20 text-green-400 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full">Ativo</span></td>
-                    </tr>
-                    <tr class="border-b border-gray-700">
-                        <td class="px-6 py-4 font-medium text-white">Carlos Eduardo Lima</td>
-                        <td class="px-6 py-4 text-gray-400">22.123.45-6</td>
-                        <td class="px-6 py-4 text-gray-400">987.654.321-20</td>
-                        <td class="px-6 py-4"><span class="bg-red-500/20 text-red-400 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full">Inativo</span></td>
-                    </tr>
+                    {% for ext in extensionistas %}
+                        {% if ext.area == 'COMOP' %}
+                        <tr class="border-b border-gray-700">
+                            <td class="px-6 py-4 font-medium text-white">{{ ext.nome }}</td>
+                            <td class="px-6 py-4 text-gray-400">{{ ext.rgm }}</td>
+                            <td class="px-6 py-4 text-gray-400">{{ ext.cpf }}</td>
+                            <td class="px-6 py-4">
+                                {% if ext.status %}
+                                    <span class="bg-green-500/20 text-green-400 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full">Ativo</span>
+                                {% else %}
+                                    <span class="bg-red-500/20 text-red-400 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full">Inativo</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endif %}
+                    {% empty %}
+                        <tr><td colspan="4" class="text-center py-6 text-gray-500">Nenhum extensionista encontrado.</td></tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>
@@ -70,14 +83,26 @@ Gerenciar Extensionistas
                         <th scope="col" class="px-6 py-4 font-semibold">Status</th>
                     </tr>
                 </thead>
-                 <tbody>
-                    <tr class="border-b border-gray-700">
-                        <td class="px-6 py-4 font-medium text-white">Daniela Martins</td>
-                        <td class="px-6 py-4 text-gray-400">21.987.65-4</td>
-                        <td class="px-6 py-4 text-gray-400">111.222.333-44</td>
-                        <td class="px-6 py-4"><span class="bg-green-500/20 text-green-400 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full">Ativo</span></td>
-                    </tr>
-                 </tbody>
+                <tbody>
+                    {% for ext in extensionistas %}
+                        {% if ext.area == 'COAD' %}
+                        <tr class="border-b border-gray-700">
+                            <td class="px-6 py-4 font-medium text-white">{{ ext.nome }}</td>
+                            <td class="px-6 py-4 text-gray-400">{{ ext.rgm }}</td>
+                            <td class="px-6 py-4 text-gray-400">{{ ext.cpf }}</td>
+                            <td class="px-6 py-4">
+                                {% if ext.status %}
+                                    <span class="bg-green-500/20 text-green-400 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full">Ativo</span>
+                                {% else %}
+                                    <span class="bg-red-500/20 text-red-400 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full">Inativo</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endif %}
+                    {% empty %}
+                        <tr><td colspan="4" class="text-center py-6 text-gray-500">Nenhum extensionista encontrado.</td></tr>
+                    {% endfor %}
+                </tbody>
             </table>
         </div>
 
@@ -86,7 +111,7 @@ Gerenciar Extensionistas
             <div class="p-4 bg-gray-700/50">
                 <h3 class="font-semibold text-white">Comitê Pedagógico (COPED)</h3>
             </div>
-             <table class="min-w-full text-left text-sm text-gray-300">
+            <table class="min-w-full text-left text-sm text-gray-300">
                 <thead class="bg-gray-700/50">
                     <tr>
                         <th scope="col" class="px-6 py-4 font-semibold">Nome</th>
@@ -95,26 +120,32 @@ Gerenciar Extensionistas
                         <th scope="col" class="px-6 py-4 font-semibold">Status</th>
                     </tr>
                 </thead>
-                 <tbody>
-                    <tr class="border-b border-gray-700">
-                        <td class="px-6 py-4 font-medium text-white">Fernanda Oliveira</td>
-                        <td class="px-6 py-4 text-gray-400">24.111.22-3</td>
-                        <td class="px-6 py-4 text-gray-400">444.555.666-77</td>
-                        <td class="px-6 py-4"><span class="bg-green-500/20 text-green-400 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full">Ativo</span></td>
-                    </tr>
-                    <tr class="border-b border-gray-700">
-                        <td class="px-6 py-4 font-medium text-white">Gabriel Souza</td>
-                        <td class="px-6 py-4 text-gray-400">20.555.44-7</td>
-                        <td class="px-6 py-4 text-gray-400">777.888.999-00</td>
-                        <td class="px-6 py-4"><span class="bg-green-500/20 text-green-400 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full">Ativo</span></td>
-                    </tr>
-                 </tbody>
+                <tbody>
+                    {% for ext in extensionistas %}
+                        {% if ext.area == 'COPED' %}
+                        <tr class="border-b border-gray-700">
+                            <td class="px-6 py-4 font-medium text-white">{{ ext.nome }}</td>
+                            <td class="px-6 py-4 text-gray-400">{{ ext.rgm }}</td>
+                            <td class="px-6 py-4 text-gray-400">{{ ext.cpf }}</td>
+                            <td class="px-6 py-4">
+                                {% if ext.status %}
+                                    <span class="bg-green-500/20 text-green-400 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full">Ativo</span>
+                                {% else %}
+                                    <span class="bg-red-500/20 text-red-400 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full">Inativo</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endif %}
+                    {% empty %}
+                        <tr><td colspan="4" class="text-center py-6 text-gray-500">Nenhum extensionista encontrado.</td></tr>
+                    {% endfor %}
+                </tbody>
             </table>
         </div>
 
         <!-- Lista COED (oculta por padrão) -->
         <div id="coed" class="extensionist-list hidden">
-             <div class="p-4 bg-gray-700/50">
+            <div class="p-4 bg-gray-700/50">
                 <h3 class="font-semibold text-white">Comitê de Eventos (COED)</h3>
             </div>
             <table class="min-w-full text-left text-sm text-gray-300">
@@ -127,9 +158,24 @@ Gerenciar Extensionistas
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td colspan="4" class="text-center py-6 text-gray-500">Nenhum extensionista encontrado para este comitê.</td>
-                    </tr>
+                    {% for ext in extensionistas %}
+                        {% if ext.area == 'COED' %}
+                        <tr class="border-b border-gray-700">
+                            <td class="px-6 py-4 font-medium text-white">{{ ext.nome }}</td>
+                            <td class="px-6 py-4 text-gray-400">{{ ext.rgm }}</td>
+                            <td class="px-6 py-4 text-gray-400">{{ ext.cpf }}</td>
+                            <td class="px-6 py-4">
+                                {% if ext.status %}
+                                    <span class="bg-green-500/20 text-green-400 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full">Ativo</span>
+                                {% else %}
+                                    <span class="bg-red-500/20 text-red-400 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full">Inativo</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endif %}
+                    {% empty %}
+                        <tr><td colspan="4" class="text-center py-6 text-gray-500">Nenhum extensionista encontrado.</td></tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>
