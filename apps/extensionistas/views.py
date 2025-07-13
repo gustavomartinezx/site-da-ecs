@@ -11,7 +11,7 @@ def extensionista_create(request):
         form = ExtensionistaForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect("extensionista_list")
+            return redirect("extensionistas:extensionista_list")
     else:
         form = ExtensionistaForm()
     return render(request, "extensionista_form.html", {"form": form})
@@ -22,7 +22,7 @@ def extensionista_update(request, pk):
         form = ExtensionistaForm(request.POST, instance=extensionista)
         if form.is_valid():
             form.save()
-            return redirect("extensionista_list")
+            return redirect("extensionistas:extensionista_list")
     else:
         form = ExtensionistaForm(instance=extensionista)
     return render(request, "extensionista_form.html", {"form": form})
