@@ -11,7 +11,7 @@ Gerenciar Extensionistas
     <div class="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
             <h1 class="text-3xl font-bold text-white">Gerenciar Extensionistas</h1>
-            <p class="text-gray-400 mt-1">Filtre, visualize e gerencie os extensionistas de cada comitê.</p>
+            <p class="text-gray-400 mt-1">Filtre, visualize e gerencie os extensionistas de cada Coordenação.</p>
         </div>
         <a href="{% url 'extensionistas:extensionista_create' %}" class="inline-flex items-center px-5 py-2.5 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg shadow transition-colors">
             <svg class="w-5 h-5 mr-2 -ml-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
@@ -19,7 +19,7 @@ Gerenciar Extensionistas
         </a>
     </div>
 
-    <!-- Filtros por Comitê e Semestre -->
+    <!-- Filtros por Coordenação e Semestre -->
     <div class="mb-6 flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
         <div id="filter-buttons" class="flex flex-wrap items-center gap-2 md:gap-4 p-2 bg-gray-800 rounded-lg">
             <button data-target="comop" class="filter-btn flex-grow md:flex-none text-sm font-semibold py-2 px-4 rounded-md bg-green-500 text-white transition-colors">COMOP</button>
@@ -35,6 +35,11 @@ Gerenciar Extensionistas
                     <option value="{{ semestre }}">{{ semestre }}</option>
                 {% endfor %}
             </select>
+        </div>
+        <!-- Filtro por nome -->
+        <div id="name-filter" class="flex flex-wrap items-center gap-2 md:gap-4 p-2 bg-gray-800 rounded-lg">
+            <label for="search-nome" class="text-sm font-semibold text-gray-300 mr-2">Buscar:</label>
+            <input id="search-nome" type="text" placeholder="Digite o nome..." class="text-sm rounded-md px-3 py-2 bg-gray-700 text-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500" />
         </div>
     </div>
 
@@ -53,7 +58,8 @@ Gerenciar Extensionistas
                         <th scope="col" class="px-6 py-4 font-semibold">RGM</th>
                         <th scope="col" class="px-6 py-4 font-semibold">CPF</th>
                         <th scope="col" class="px-6 py-4 font-semibold">Status</th>
-                        <th scope="col" class="px-6 py-4 font-semibold text-center">Config</th>
+                        <th scope="col" class="px-6 py-4 font-semibold">Última Atualização</th>
+                        <th scope="col" class="px-6 py-4 font-semibold text-center">Ações</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -70,18 +76,16 @@ Gerenciar Extensionistas
                                     <span class="bg-red-500/20 text-red-400 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full">Inativo</span>
                                 {% endif %}
                             </td>
-                            <td class="px-6 py-4 text-center flex items-center justify-center gap-2">
-                                <a href="{% url 'extensionistas:extensionista_update' ext.pk %}" title="Editar extensionista" class="inline-flex items-center justify-center text-gray-400 hover:text-green-400 transition-colors">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-1.14 1.952-1.14 2.252 0a1.724 1.724 0 002.573 1.01c1.01-.586 2.175.578 1.59 1.59a1.724 1.724 0 001.01 2.572c1.14.3 1.14 1.953 0 2.253a1.724 1.724 0 00-1.01 2.572c.585 1.01-.579 2.175-1.59 1.59a1.724 1.724 0 00-2.572 1.01c-.3 1.14-1.953 1.14-2.253 0a1.724 1.724 0 00-2.572-1.01c-1.01.585-2.175-.58-1.59-1.59a1.724 1.724 0 00-1.01-2.572c-1.14-.3-1.14-1.953 0-2.253a1.724 1.724 0 001.01-2.572c-.585-1.01.58-2.175 1.59-1.59.996.578 2.175-.579 2.572-1.01z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    </svg>
-                                </a>
-                                <a href="{% url 'extensionistas:extensionista_delete' ext.pk %}" title="Deletar extensionista" class="inline-flex items-center justify-center text-gray-400 hover:text-red-500 transition-colors">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 25 29" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M8 7V5a2 2 0 012-2h2a2 2 0 012 2v2" />
-                                    </svg>
-                                </a>
+                            <td class="px-6 py-4 text-gray-400">
+                                {% if ext.updated_at %}
+                                    {{ ext.updated_at|date:'d/m/Y H:i' }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                <a href="{% url 'extensionistas:extensionista_update' ext.pk %}" class="text-blue-400 hover:underline">Editar</a>
+                                <a href="{% url 'extensionistas:extensionista_delete' ext.pk %}" class="text-red-400 hover:underline ml-4">Excluir</a>
                             </td>
                         </tr>
                         {% endif %}
@@ -104,7 +108,7 @@ Gerenciar Extensionistas
                         <th scope="col" class="px-6 py-4 font-semibold">RGM</th>
                         <th scope="col" class="px-6 py-4 font-semibold">CPF</th>
                         <th scope="col" class="px-6 py-4 font-semibold">Status</th>
-                        <th scope="col" class="px-6 py-4 font-semibold text-center">Config</th>
+                        <th scope="col" class="px-6 py-4 font-semibold text-center">Ações</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -121,18 +125,16 @@ Gerenciar Extensionistas
                                     <span class="bg-red-500/20 text-red-400 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full">Inativo</span>
                                 {% endif %}
                             </td>
-                            <td class="px-6 py-4 text-center flex items-center justify-center gap-2">
-                                <a href="{% url 'extensionistas:extensionista_update' ext.pk %}" title="Editar extensionista" class="inline-flex items-center justify-center text-gray-400 hover:text-green-400 transition-colors">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-1.14 1.952-1.14 2.252 0a1.724 1.724 0 002.573 1.01c1.01-.586 2.175.578 1.59 1.59a1.724 1.724 0 001.01 2.572c1.14.3 1.14 1.953 0 2.253a1.724 1.724 0 00-1.01 2.572c.585 1.01-.579 2.175-1.59 1.59a1.724 1.724 0 00-2.572 1.01c-.3 1.14-1.953 1.14-2.253 0a1.724 1.724 0 00-2.572-1.01c-1.01.585-2.175-.58-1.59-1.59a1.724 1.724 0 00-1.01-2.572c-1.14-.3-1.14-1.953 0-2.253a1.724 1.724 0 001.01-2.572c-.585-1.01.58-2.175 1.59-1.59.996.578 2.175-.579 2.572-1.01z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    </svg>
-                                </a>
-                                <a href="{% url 'extensionistas:extensionista_delete' ext.pk %}" title="Deletar extensionista" class="inline-flex items-center justify-center text-gray-400 hover:text-red-500 transition-colors">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 25 29" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M8 7V5a2 2 0 012-2h2a2 2 0 012 2v2" />
-                                    </svg>
-                                </a>
+                            <td class="px-6 py-4 text-gray-400">
+                                {% if ext.updated_at %}
+                                    {{ ext.updated_at|date:'d/m/Y H:i' }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                <a href="{% url 'extensionistas:extensionista_update' ext.pk %}" class="text-blue-400 hover:underline">Editar</a>
+                                <a href="{% url 'extensionistas:extensionista_delete' ext.pk %}" class="text-red-400 hover:underline ml-4">Excluir</a>
                             </td>
                         </tr>
                         {% endif %}
@@ -155,7 +157,7 @@ Gerenciar Extensionistas
                         <th scope="col" class="px-6 py-4 font-semibold">RGM</th>
                         <th scope="col" class="px-6 py-4 font-semibold">CPF</th>
                         <th scope="col" class="px-6 py-4 font-semibold">Status</th>
-                        <th scope="col" class="px-6 py-4 font-semibold text-center">Config</th>
+                        <th scope="col" class="px-6 py-4 font-semibold text-center">Ações</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -172,18 +174,16 @@ Gerenciar Extensionistas
                                     <span class="bg-red-500/20 text-red-400 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full">Inativo</span>
                                 {% endif %}
                             </td>
-                            <td class="px-6 py-4 text-center flex items-center justify-center gap-2">
-                                <a href="{% url 'extensionistas:extensionista_update' ext.pk %}" title="Editar extensionista" class="inline-flex items-center justify-center text-gray-400 hover:text-green-400 transition-colors">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-1.14 1.952-1.14 2.252 0a1.724 1.724 0 002.573 1.01c1.01-.586 2.175.578 1.59 1.59a1.724 1.724 0 001.01 2.572c1.14.3 1.14 1.953 0 2.253a1.724 1.724 0 00-1.01 2.572c.585 1.01-.579 2.175-1.59 1.59a1.724 1.724 0 00-2.572 1.01c-.3 1.14-1.953 1.14-2.253 0a1.724 1.724 0 00-2.572-1.01c-1.01.585-2.175-.58-1.59-1.59a1.724 1.724 0 00-1.01-2.572c-1.14-.3-1.14-1.953 0-2.253a1.724 1.724 0 001.01-2.572c-.585-1.01.58-2.175 1.59-1.59.996.578 2.175-.579 2.572-1.01z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    </svg>
-                                </a>
-                                <a href="{% url 'extensionistas:extensionista_delete' ext.pk %}" title="Deletar extensionista" class="inline-flex items-center justify-center text-gray-400 hover:text-red-500 transition-colors">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 25 29" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M8 7V5a2 2 0 012-2h2a2 2 0 012 2v2" />
-                                    </svg>
-                                </a>
+                            <td class="px-6 py-4 text-gray-400">
+                                {% if ext.updated_at %}
+                                    {{ ext.updated_at|date:'d/m/Y H:i' }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                <a href="{% url 'extensionistas:extensionista_update' ext.pk %}" class="text-blue-400 hover:underline">Editar</a>
+                                <a href="{% url 'extensionistas:extensionista_delete' ext.pk %}" class="text-red-400 hover:underline ml-4">Excluir</a>
                             </td>
                         </tr>
                         {% endif %}
@@ -206,7 +206,7 @@ Gerenciar Extensionistas
                         <th scope="col" class="px-6 py-4 font-semibold">RGM</th>
                         <th scope="col" class="px-6 py-4 font-semibold">CPF</th>
                         <th scope="col" class="px-6 py-4 font-semibold">Status</th>
-                        <th scope="col" class="px-6 py-4 font-semibold text-center">Config</th>
+                        <th scope="col" class="px-6 py-4 font-semibold text-center">Ações</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -221,6 +221,13 @@ Gerenciar Extensionistas
                                     <span class="bg-green-500/20 text-green-400 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full">Ativo</span>
                                 {% else %}
                                     <span class="bg-red-500/20 text-red-400 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full">Inativo</span>
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-4 text-gray-400">
+                                {% if ext.updated_at %}
+                                    {{ ext.updated_at|date:'d/m/Y H:i' }}
+                                {% else %}
+                                    -
                                 {% endif %}
                             </td>
                             <td class="px-6 py-4 text-center flex items-center justify-center gap-2">
@@ -250,7 +257,7 @@ Gerenciar Extensionistas
 
 {% block extra_js %}
 <script>
-    // Comitê filter
+    // Coordenação filter
     const filterContainer = document.getElementById('filter-buttons');
     const filterButtons = filterContainer.querySelectorAll('.filter-btn');
     const extensionistLists = document.querySelectorAll('.extensionist-list');
@@ -271,34 +278,54 @@ Gerenciar Extensionistas
                 list.classList.add('hidden');
             }
         });
+        applyFilters();
     });
 
     // Semestre filter
     const semesterSelect = document.getElementById('semester-select');
     if (semesterSelect) {
         semesterSelect.addEventListener('change', function() {
-            const selected = this.value;
-            document.querySelectorAll('.extensionist-list table tbody tr').forEach(row => {
-                if (selected === 'all') {
-                    row.style.display = '';
-                    return;
-                }
+            applyFilters();
+        });
+    }
+
+    // Nome filter
+    const searchNome = document.getElementById('search-nome');
+    if (searchNome) {
+        searchNome.addEventListener('input', function() {
+            applyFilters();
+        });
+    }
+
+    function applyFilters() {
+        const selectedSemester = semesterSelect ? semesterSelect.value : 'all';
+        const searchValue = searchNome ? searchNome.value.trim().toLowerCase() : '';
+        document.querySelectorAll('.extensionist-list:not(.hidden) table tbody tr').forEach(row => {
+            // Filtro por semestre
+            let show = true;
+            if (selectedSemester !== 'all') {
                 const createdAt = row.getAttribute('data-created-at');
-                if (!createdAt) {
-                    row.style.display = '';
-                    return;
+                if (createdAt) {
+                    const date = new Date(createdAt);
+                    const year = date.getFullYear();
+                    const month = date.getMonth() + 1;
+                    let semestre = year + '.' + (month <= 6 ? '1' : '2');
+                    if (semestre !== selectedSemester) {
+                        show = false;
+                    }
                 }
-                // createdAt format: yyyy-mm-ddThh:mm:ssZ
-                const date = new Date(createdAt);
-                const year = date.getFullYear();
-                const month = date.getMonth() + 1;
-                let semestre = year + '.' + (month <= 6 ? '1' : '2');
-                if (semestre === selected) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
+            }
+            // Filtro por nome
+            if (show && searchValue) {
+                const nomeCell = row.querySelector('td');
+                if (nomeCell) {
+                    const nome = nomeCell.textContent.trim().toLowerCase();
+                    if (!nome.includes(searchValue)) {
+                        show = false;
+                    }
                 }
-            });
+            }
+            row.style.display = show ? '' : 'none';
         });
     }
 </script>
