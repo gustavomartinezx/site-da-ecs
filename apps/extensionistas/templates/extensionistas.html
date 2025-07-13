@@ -19,13 +19,22 @@ Gerenciar Extensionistas
         </a>
     </div>
 
-    <!-- Filtros por Comitê -->
-    <div class="mb-6">
+    <!-- Filtros por Comitê e Semestre -->
+    <div class="mb-6 flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
         <div id="filter-buttons" class="flex flex-wrap items-center gap-2 md:gap-4 p-2 bg-gray-800 rounded-lg">
             <button data-target="comop" class="filter-btn flex-grow md:flex-none text-sm font-semibold py-2 px-4 rounded-md bg-green-500 text-white transition-colors">COMOP</button>
             <button data-target="coad" class="filter-btn flex-grow md:flex-none text-sm font-semibold py-2 px-4 rounded-md bg-gray-700 hover:bg-gray-600 text-gray-300 transition-colors">COAD</button>
             <button data-target="coped" class="filter-btn flex-grow md:flex-none text-sm font-semibold py-2 px-4 rounded-md bg-gray-700 hover:bg-gray-600 text-gray-300 transition-colors">COPED</button>
             <button data-target="coed" class="filter-btn flex-grow md:flex-none text-sm font-semibold py-2 px-4 rounded-md bg-gray-700 hover:bg-gray-600 text-gray-300 transition-colors">COED</button>
+        </div>
+        <div id="semester-filter" class="flex flex-wrap items-center gap-2 md:gap-4 p-2 bg-gray-800 rounded-lg">
+            <label for="semester-select" class="text-sm font-semibold text-gray-300 mr-2">Semestre:</label>
+            <select id="semester-select" class="text-sm rounded-md px-3 py-2 bg-gray-700 text-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500">
+                <option value="all">Todos</option>
+                {% for semestre in semestres %}
+                    <option value="{{ semestre }}">{{ semestre }}</option>
+                {% endfor %}
+            </select>
         </div>
     </div>
 
@@ -44,12 +53,13 @@ Gerenciar Extensionistas
                         <th scope="col" class="px-6 py-4 font-semibold">RGM</th>
                         <th scope="col" class="px-6 py-4 font-semibold">CPF</th>
                         <th scope="col" class="px-6 py-4 font-semibold">Status</th>
+                        <th scope="col" class="px-6 py-4 font-semibold text-center">Config</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for ext in extensionistas %}
                         {% if ext.area == 'COMOP' %}
-                        <tr class="border-b border-gray-700">
+                        <tr class="border-b border-gray-700" data-created-at="{{ ext.created_at|date:'c' }}">
                             <td class="px-6 py-4 font-medium text-white">{{ ext.nome }}</td>
                             <td class="px-6 py-4 text-gray-400">{{ ext.rgm }}</td>
                             <td class="px-6 py-4 text-gray-400">{{ ext.cpf }}</td>
@@ -59,6 +69,19 @@ Gerenciar Extensionistas
                                 {% else %}
                                     <span class="bg-red-500/20 text-red-400 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full">Inativo</span>
                                 {% endif %}
+                            </td>
+                            <td class="px-6 py-4 text-center flex items-center justify-center gap-2">
+                                <a href="{% url 'extensionistas:extensionista_update' ext.pk %}" title="Editar extensionista" class="inline-flex items-center justify-center text-gray-400 hover:text-green-400 transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-1.14 1.952-1.14 2.252 0a1.724 1.724 0 002.573 1.01c1.01-.586 2.175.578 1.59 1.59a1.724 1.724 0 001.01 2.572c1.14.3 1.14 1.953 0 2.253a1.724 1.724 0 00-1.01 2.572c.585 1.01-.579 2.175-1.59 1.59a1.724 1.724 0 00-2.572 1.01c-.3 1.14-1.953 1.14-2.253 0a1.724 1.724 0 00-2.572-1.01c-1.01.585-2.175-.58-1.59-1.59a1.724 1.724 0 00-1.01-2.572c-1.14-.3-1.14-1.953 0-2.253a1.724 1.724 0 001.01-2.572c-.585-1.01.58-2.175 1.59-1.59.996.578 2.175-.579 2.572-1.01z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    </svg>
+                                </a>
+                                <a href="{% url 'extensionistas:extensionista_delete' ext.pk %}" title="Deletar extensionista" class="inline-flex items-center justify-center text-gray-400 hover:text-red-500 transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 25 29" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M8 7V5a2 2 0 012-2h2a2 2 0 012 2v2" />
+                                    </svg>
+                                </a>
                             </td>
                         </tr>
                         {% endif %}
@@ -81,12 +104,13 @@ Gerenciar Extensionistas
                         <th scope="col" class="px-6 py-4 font-semibold">RGM</th>
                         <th scope="col" class="px-6 py-4 font-semibold">CPF</th>
                         <th scope="col" class="px-6 py-4 font-semibold">Status</th>
+                        <th scope="col" class="px-6 py-4 font-semibold text-center">Config</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for ext in extensionistas %}
                         {% if ext.area == 'COAD' %}
-                        <tr class="border-b border-gray-700">
+                        <tr class="border-b border-gray-700" data-created-at="{{ ext.created_at|date:'c' }}">
                             <td class="px-6 py-4 font-medium text-white">{{ ext.nome }}</td>
                             <td class="px-6 py-4 text-gray-400">{{ ext.rgm }}</td>
                             <td class="px-6 py-4 text-gray-400">{{ ext.cpf }}</td>
@@ -96,6 +120,19 @@ Gerenciar Extensionistas
                                 {% else %}
                                     <span class="bg-red-500/20 text-red-400 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full">Inativo</span>
                                 {% endif %}
+                            </td>
+                            <td class="px-6 py-4 text-center flex items-center justify-center gap-2">
+                                <a href="{% url 'extensionistas:extensionista_update' ext.pk %}" title="Editar extensionista" class="inline-flex items-center justify-center text-gray-400 hover:text-green-400 transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-1.14 1.952-1.14 2.252 0a1.724 1.724 0 002.573 1.01c1.01-.586 2.175.578 1.59 1.59a1.724 1.724 0 001.01 2.572c1.14.3 1.14 1.953 0 2.253a1.724 1.724 0 00-1.01 2.572c.585 1.01-.579 2.175-1.59 1.59a1.724 1.724 0 00-2.572 1.01c-.3 1.14-1.953 1.14-2.253 0a1.724 1.724 0 00-2.572-1.01c-1.01.585-2.175-.58-1.59-1.59a1.724 1.724 0 00-1.01-2.572c-1.14-.3-1.14-1.953 0-2.253a1.724 1.724 0 001.01-2.572c-.585-1.01.58-2.175 1.59-1.59.996.578 2.175-.579 2.572-1.01z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    </svg>
+                                </a>
+                                <a href="{% url 'extensionistas:extensionista_delete' ext.pk %}" title="Deletar extensionista" class="inline-flex items-center justify-center text-gray-400 hover:text-red-500 transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 25 29" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M8 7V5a2 2 0 012-2h2a2 2 0 012 2v2" />
+                                    </svg>
+                                </a>
                             </td>
                         </tr>
                         {% endif %}
@@ -118,12 +155,13 @@ Gerenciar Extensionistas
                         <th scope="col" class="px-6 py-4 font-semibold">RGM</th>
                         <th scope="col" class="px-6 py-4 font-semibold">CPF</th>
                         <th scope="col" class="px-6 py-4 font-semibold">Status</th>
+                        <th scope="col" class="px-6 py-4 font-semibold text-center">Config</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for ext in extensionistas %}
                         {% if ext.area == 'COPED' %}
-                        <tr class="border-b border-gray-700">
+                        <tr class="border-b border-gray-700" data-created-at="{{ ext.created_at|date:'c' }}">
                             <td class="px-6 py-4 font-medium text-white">{{ ext.nome }}</td>
                             <td class="px-6 py-4 text-gray-400">{{ ext.rgm }}</td>
                             <td class="px-6 py-4 text-gray-400">{{ ext.cpf }}</td>
@@ -133,6 +171,19 @@ Gerenciar Extensionistas
                                 {% else %}
                                     <span class="bg-red-500/20 text-red-400 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full">Inativo</span>
                                 {% endif %}
+                            </td>
+                            <td class="px-6 py-4 text-center flex items-center justify-center gap-2">
+                                <a href="{% url 'extensionistas:extensionista_update' ext.pk %}" title="Editar extensionista" class="inline-flex items-center justify-center text-gray-400 hover:text-green-400 transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-1.14 1.952-1.14 2.252 0a1.724 1.724 0 002.573 1.01c1.01-.586 2.175.578 1.59 1.59a1.724 1.724 0 001.01 2.572c1.14.3 1.14 1.953 0 2.253a1.724 1.724 0 00-1.01 2.572c.585 1.01-.579 2.175-1.59 1.59a1.724 1.724 0 00-2.572 1.01c-.3 1.14-1.953 1.14-2.253 0a1.724 1.724 0 00-2.572-1.01c-1.01.585-2.175-.58-1.59-1.59a1.724 1.724 0 00-1.01-2.572c-1.14-.3-1.14-1.953 0-2.253a1.724 1.724 0 001.01-2.572c-.585-1.01.58-2.175 1.59-1.59.996.578 2.175-.579 2.572-1.01z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    </svg>
+                                </a>
+                                <a href="{% url 'extensionistas:extensionista_delete' ext.pk %}" title="Deletar extensionista" class="inline-flex items-center justify-center text-gray-400 hover:text-red-500 transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 25 29" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M8 7V5a2 2 0 012-2h2a2 2 0 012 2v2" />
+                                    </svg>
+                                </a>
                             </td>
                         </tr>
                         {% endif %}
@@ -155,12 +206,13 @@ Gerenciar Extensionistas
                         <th scope="col" class="px-6 py-4 font-semibold">RGM</th>
                         <th scope="col" class="px-6 py-4 font-semibold">CPF</th>
                         <th scope="col" class="px-6 py-4 font-semibold">Status</th>
+                        <th scope="col" class="px-6 py-4 font-semibold text-center">Config</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for ext in extensionistas %}
                         {% if ext.area == 'COED' %}
-                        <tr class="border-b border-gray-700">
+                        <tr class="border-b border-gray-700" data-created-at="{{ ext.created_at|date:'c' }}">
                             <td class="px-6 py-4 font-medium text-white">{{ ext.nome }}</td>
                             <td class="px-6 py-4 text-gray-400">{{ ext.rgm }}</td>
                             <td class="px-6 py-4 text-gray-400">{{ ext.cpf }}</td>
@@ -170,6 +222,19 @@ Gerenciar Extensionistas
                                 {% else %}
                                     <span class="bg-red-500/20 text-red-400 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full">Inativo</span>
                                 {% endif %}
+                            </td>
+                            <td class="px-6 py-4 text-center flex items-center justify-center gap-2">
+                                <a href="{% url 'extensionistas:extensionista_update' ext.pk %}" title="Editar extensionista" class="inline-flex items-center justify-center text-gray-400 hover:text-green-400 transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-1.14 1.952-1.14 2.252 0a1.724 1.724 0 002.573 1.01c1.01-.586 2.175.578 1.59 1.59a1.724 1.724 0 001.01 2.572c1.14.3 1.14 1.953 0 2.253a1.724 1.724 0 00-1.01 2.572c.585 1.01-.579 2.175-1.59 1.59a1.724 1.724 0 00-2.572 1.01c-.3 1.14-1.953 1.14-2.253 0a1.724 1.724 0 00-2.572-1.01c-1.01.585-2.175-.58-1.59-1.59a1.724 1.724 0 00-1.01-2.572c-1.14-.3-1.14-1.953 0-2.253a1.724 1.724 0 001.01-2.572c-.585-1.01.58-2.175 1.59-1.59.996.578 2.175-.579 2.572-1.01z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    </svg>
+                                </a>
+                                <a href="{% url 'extensionistas:extensionista_delete' ext.pk %}" title="Deletar extensionista" class="inline-flex items-center justify-center text-gray-400 hover:text-red-500 transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 25 29" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M8 7V5a2 2 0 012-2h2a2 2 0 012 2v2" />
+                                    </svg>
+                                </a>
                             </td>
                         </tr>
                         {% endif %}
@@ -185,29 +250,20 @@ Gerenciar Extensionistas
 
 {% block extra_js %}
 <script>
-    // Seleciona o container dos botões, os botões e as listas
+    // Comitê filter
     const filterContainer = document.getElementById('filter-buttons');
     const filterButtons = filterContainer.querySelectorAll('.filter-btn');
     const extensionistLists = document.querySelectorAll('.extensionist-list');
 
-    // Adiciona um evento de clique no container dos botões (delegação de evento)
     filterContainer.addEventListener('click', (event) => {
-        // Verifica se o elemento clicado é realmente um botão de filtro
-        if (!event.target.matches('.filter-btn')) {
-            return;
-        }
-
+        if (!event.target.matches('.filter-btn')) return;
         const targetId = event.target.dataset.target;
-
-        // Atualiza a aparência dos botões
         filterButtons.forEach(button => {
             button.classList.remove('bg-green-500', 'text-white');
             button.classList.add('bg-gray-700', 'hover:bg-gray-600', 'text-gray-300');
         });
         event.target.classList.add('bg-green-500', 'text-white');
         event.target.classList.remove('bg-gray-700', 'hover:bg-gray-600', 'text-gray-300');
-
-        // Mostra a lista correta e esconde as outras
         extensionistLists.forEach(list => {
             if (list.id === targetId) {
                 list.classList.remove('hidden');
@@ -216,5 +272,34 @@ Gerenciar Extensionistas
             }
         });
     });
+
+    // Semestre filter
+    const semesterSelect = document.getElementById('semester-select');
+    if (semesterSelect) {
+        semesterSelect.addEventListener('change', function() {
+            const selected = this.value;
+            document.querySelectorAll('.extensionist-list table tbody tr').forEach(row => {
+                if (selected === 'all') {
+                    row.style.display = '';
+                    return;
+                }
+                const createdAt = row.getAttribute('data-created-at');
+                if (!createdAt) {
+                    row.style.display = '';
+                    return;
+                }
+                // createdAt format: yyyy-mm-ddThh:mm:ssZ
+                const date = new Date(createdAt);
+                const year = date.getFullYear();
+                const month = date.getMonth() + 1;
+                let semestre = year + '.' + (month <= 6 ? '1' : '2');
+                if (semestre === selected) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    }
 </script>
 {% endblock extra_js %}
