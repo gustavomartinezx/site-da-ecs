@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "apps.extensionistas",
     "apps.cursos",
     "apps.login",
+    "apps.aluno",
 ]
 
 MIDDLEWARE = [

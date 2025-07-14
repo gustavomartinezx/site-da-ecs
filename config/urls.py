@@ -26,6 +26,7 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(next_page=reverse_lazy('login')), name='logout'),
     path('', include('apps.core.urls', namespace='dashboard')),
     path('cursos/', include('apps.cursos.urls', namespace='cursos')),
+    path('aluno/', include('apps.aluno.urls', namespace='aluno')),
     path('extensionistas/', include('apps.extensionistas.urls', namespace='extensionistas')),
 ]
 
