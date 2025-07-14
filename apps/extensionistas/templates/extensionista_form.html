@@ -68,8 +68,8 @@
                     <label for="id_status" class="block text-sm font-medium text-gray-300">Status do Extensionista</label>
                     <p class="text-xs text-gray-500">Define se o extensionista está ativo no projeto.</p>
                 </div>
-                <label for="id_status" class="flex items-center cursor-pointer ml-4">
-                    <input type="checkbox" name="status" id="id_status" class="sr-only peer" {% if form.status.value %}checked{% endif %}>
+                <label for="id_status" class="relative flex items-center cursor-pointer ml-4">
+                    <input type="checkbox" name="status" id="id_status" class="sr-only peer" value="ativo" {% if form.status.value == 'ativo' or form.instance.status == 'ativo' %}checked{% endif %}>
                     <div class="w-12 h-6 bg-gray-600 rounded-full shadow-inner peer-checked:bg-green-600 transition-colors duration-300"></div>
                     <div class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full shadow transform transition-transform duration-300 peer-checked:translate-x-6"></div>
                 </label>

@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load widget_tweaks %}
 
 {% block title %}{% if curso %}Editar Curso{% else %}Novo Curso{% endif %}{% endblock %}
 
@@ -21,35 +22,36 @@
             </div>
         {% endif %}
 
-
+        {% with field_classes="block w-full bg-gray-900/50 border border-gray-600 rounded-md shadow-sm pl-10 pr-3 py-2.5 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-green-500 focus:border-green-500 sm:text-sm transition-colors duration-200" %}
+        
         <div>
             <label for="id_nome" class="block text-sm font-medium text-gray-300 mb-2">Nome do Curso</label>
             <div class="relative">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <svg class="w-5 h-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                    <svg class="w-5 h-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.998.998 0 01.056 0l4.088-1.861a1 1 0 00.564 0l4.088 1.861a1 1 0 01.056 0L17.92 6.92a1 1 0 000-1.84l-7-3zM3 9.611l4.088 1.861a1 1 0 00.564 0L11.74 9.61a1 1 0 011.518 0l4.661 2.12a1 1 0 00.707 0l1.228-.559a1 1 0 00-.707-1.84l-1.228.559a1 1 0 01-.707 0L12 9.421V16a1 1 0 01-2 0V9.42l-4.689 2.131a1 1 0 01-.707 0l-1.228-.559a1 1 0 00-.707 1.84l1.228.559a1 1 0 00.707 0L8 11.471V16a1 1 0 01-2 0V9.611z" />
                     </svg>
                 </div>
-                {{ form.nome }}
+                {% render_field form.nome class=field_classes placeholder="Ex: Análise e Desenvolvimento de Sistemas" %}
             </div>
             {% if form.nome.errors %}
                 <p class="mt-2 text-sm text-red-500">{{ form.nome.errors|striptags }}</p>
             {% endif %}
         </div>
-
+        {% endwith %}
 
         <div class="flex items-center justify-between pt-4">
             <div>
                 <label for="id_status" class="block text-sm font-medium text-gray-300">Status do Curso</label>
                 <p class="text-xs text-gray-500">Define se o curso está ativo ou inativo.</p>
             </div>
-            <label for="id_status" class="flex items-center cursor-pointer ml-4">
+            <label for="id_status" class="relative flex items-center cursor-pointer ml-4">
                 <input type="checkbox" name="status" id="id_status" class="sr-only peer" value="ativo" {% if form.status.value == 'ativo' %}checked{% endif %}>
                 <div class="w-12 h-6 bg-gray-600 rounded-full shadow-inner peer-checked:bg-green-600 transition-colors duration-300"></div>
                 <div class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full shadow transform transition-transform duration-300 peer-checked:translate-x-6"></div>
             </label>
-            {% if form.status.errors %}<p class="mt-2 text-sm text-red-500">{{ form.status.errors|striptags }}</p>{% endif %}
         </div>
+        {% if form.status.errors %}<p class="mt-2 text-sm text-red-500 text-right">{{ form.status.errors|striptags }}</p>{% endif %}
 
         <div class="pt-6 flex justify-end items-center gap-4 border-t border-gray-700 mt-8">
             <a href="{% url 'cursos:curso_list' %}" class="px-5 py-2.5 rounded-lg text-sm font-medium text-gray-300 bg-transparent hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-gray-600 transition-all duration-200">
@@ -57,7 +59,7 @@
             </a>
             <button type="submit" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-green-500 transition-all duration-200">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M7.707 10.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l7-7a1 1 0 00-1.414-1.414L11 11.586l-2.293-2.293z" />
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
                 </svg>
                 Salvar
             </button>
