@@ -28,7 +28,10 @@ def curso_update(request, pk):
             post_data['status'] = 'inativo'
         form = CursoForm(post_data, instance=curso)
         if form.is_valid():
-            form.save()
+            curso = form.save(commit=False)
+            from django.utils import timezone
+            curso.atualizado_em = timezone.now()
+            curso.save()
             return redirect(reverse("cursos:curso_list"))
     else:
         form = CursoForm(instance=curso)
