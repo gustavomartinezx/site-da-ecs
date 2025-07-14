@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}Editar Curso{% endblock %}
+
+{% block content %}
+<div class="max-w-xl mx-auto bg-gray-800 rounded-xl shadow-lg p-8 my-10 border border-gray-700">
+    <div class="mb-8 text-center">
+        <h1 class="text-3xl font-bold text-white">Editar Curso</h1>
+        <p class="text-gray-400 mt-2">Atualize as informações do curso abaixo.</p>
+    </div>
+    <form method="post" novalidate class="space-y-6">
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+            <div class="bg-red-900/50 border border-red-700 text-red-300 px-4 py-3 rounded-lg mb-6" role="alert">
+                {{ form.non_field_errors|striptags }}
+            </div>
+        {% endif %}
+        <div>
+            <label for="id_nome" class="block text-sm font-medium text-gray-300 mb-2">Nome do Curso</label>
+            <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <svg class="w-5 h-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                    </svg>
+                </div>
+                {{ form.nome }}
+            </div>
+            {% if form.nome.errors %}
+                <p class="mt-2 text-sm text-red-500">{{ form.nome.errors|striptags }}</p>
+            {% endif %}
+        </div>
+        <div class="flex items-center justify-between pt-4">
+            <div>
+                <label for="id_status" class="block text-sm font-medium text-gray-300">Status do Curso</label>
+                <p class="text-xs text-gray-500">Define se o curso está ativo ou inativo.</p>
+            </div>
+            <label for="id_status" class="flex items-center cursor-pointer ml-4">
+                <input type="checkbox" name="status" id="id_status" class="sr-only peer" value="ativo" {% if form.status.value == 'ativo' %}checked{% endif %}>
+                <div class="w-12 h-6 bg-gray-600 rounded-full shadow-inner peer-checked:bg-green-600 transition-colors duration-300"></div>
+                <div class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full shadow transform transition-transform duration-300 peer-checked:translate-x-6"></div>
+            </label>
+            {% if form.status.errors %}<p class="mt-2 text-sm text-red-500">{{ form.status.errors|striptags }}</p>{% endif %}
+        </div>
+        <div class="pt-6 flex justify-end items-center gap-4 border-t border-gray-700 mt-8">
+            <a href="{% url 'cursos:curso_list' %}" class="px-5 py-2.5 rounded-lg text-sm font-medium text-gray-300 bg-transparent hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-gray-600 transition-all duration-200">
+                Cancelar
+            </a>
+            <button type="submit" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-green-500 transition-all duration-200">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M7.707 10.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l7-7a1 1 0 00-1.414-1.414L11 11.586l-2.293-2.293z" />
+                </svg>
+                Salvar
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

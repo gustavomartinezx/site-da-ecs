@@ -8,44 +8,46 @@ Gerenciar Cursos
 
 {% block content %}
 <div class="max-w-7xl mx-auto">
-    <!-- Título da página -->
     <div class="mb-8">
         <h1 class="text-3xl font-bold text-white">Lista de Cursos</h1>
         <p class="text-gray-400 mt-1">Adicione, edite ou remova os cursos do portal.</p>
     </div>
-
-    <!-- Botão de Ação -->
     <div class="flex justify-end mb-6">
-        <a href="#" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg flex items-center">
+        <a href="{% url 'cursos:curso_create' %}" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg flex items-center">
             <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
             </svg>
             Adicionar Novo Curso
         </a>
     </div>
-
-    <!-- Tabela de Cursos (Exemplo) -->
     <div class="bg-gray-800 rounded-2xl border border-gray-700 overflow-hidden">
         <table class="min-w-full text-left text-sm text-gray-300">
             <thead class="bg-gray-700/50">
                 <tr>
                     <th scope="col" class="px-6 py-4 font-semibold">Nome do Curso</th>
-                    <th scope="col" class="px-6 py-4 font-semibold">Carga Horária</th>
                     <th scope="col" class="px-6 py-4 font-semibold">Status</th>
                     <th scope="col" class="px-6 py-4 font-semibold">Ações</th>
                 </tr>
             </thead>
             <tbody>
+                {% for curso in cursos %}
                 <tr class="border-b border-gray-700">
-                    <td class="px-6 py-4 font-medium text-white">Desenvolvimento Web com Django</td>
-                    <td class="px-6 py-4">80h</td>
-                    <td class="px-6 py-4"><span class="bg-green-500/20 text-green-400 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full">Ativo</span></td>
+                    <td class="px-6 py-4 font-medium text-white">{{ curso.nome }}</td>
                     <td class="px-6 py-4">
-                        <a href="#" class="text-blue-400 hover:underline">Editar</a>
-                        <a href="#" class="text-red-400 hover:underline ml-4">Excluir</a>
+                        {% if curso.status == 'ativo' %}
+                            <span class="bg-green-500/20 text-green-400 text-xs font-medium px-2.5 py-0.5 rounded-full">Ativo</span>
+                        {% else %}
+                            <span class="bg-red-500/20 text-red-400 text-xs font-medium px-2.5 py-0.5 rounded-full">Inativo</span>
+                        {% endif %}
+                    </td>
+                    <td class="px-6 py-4">
+                        <a href="{% url 'cursos:curso_update' curso.pk %}" class="text-blue-400 hover:underline">Editar</a>
+                        <a href="{% url 'cursos:curso_delete' curso.pk %}" class="text-red-400 hover:underline ml-4">Excluir</a>
                     </td>
                 </tr>
-                <!-- ... outras linhas da tabela para outros cursos ... -->
+                {% empty %}
+                <tr><td colspan="3" class="px-6 py-4">Nenhum curso cadastrado.</td></tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>
